@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Webcam Demo</title>
+<style>
+  :root { --bg:#0f172a; --card:#1e293b; --accent:#38bdf8; --text:#e2e8f0; --muted:#94a3b8; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:var(--bg); color:var(--text); }
+  header { padding:24px 16px 8px; text-align:center; }
+  h1 { margin:0 0 6px; font-size:1.8rem; }
+  header p { margin:0; color:var(--muted); }
+  main { max-width:1000px; margin:0 auto; padding:16px; display:grid; gap:16px; }
+  .card { background:var(--card); border-radius:14px; padding:16px; }
+  .stage { position:relative; background:#000; border-radius:10px; overflow:hidden; aspect-ratio:16/9; display:flex; align-items:center; justify-content:center; }
+  video { width:100%; height:100%; object-fit:cover; }
+  video.mirror { transform: scaleX(-1); }
+  .placeholder { position:absolute; color:var(--muted); text-align:center; padding:16px; }
+  .controls { display:flex; flex-wrap:wrap; gap:10px; margin-top:14px; align-items:center; }
+  button, select { font:inherit; border:0; border-radius:8px; padding:10px 14px; cursor:pointer; }
+  button { background:var(--accent); color:#0f172a; font-weight:600; }
+  button.secondary { background:#334155; color:var(--text); }
+  button:disabled { opacity:.45; cursor:not-allowed; }
+  select { background:#334155; color:var(--text); }
+  label { display:flex; align-items:center; gap:6px; color:var(--muted); }
+  #status { margin-top:10px; color:var(--muted); min-height:1.2em; }
+  #gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; }
+  #gallery figure { margin:0; background:#0b1220; border-radius:8px; overflow:hidden; }
+  #gallery img { width:100%; display:block; }
+  #gallery a { display:block; text-align:center; padding:6px; color:var(--accent); text-decoration:none; font-size:.9rem; }
+  .empty { color:var(--muted); }
+  canvas { display:none; }
+  footer { text-align:center; color:var(--muted); padding:20px; font-size:.85rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>📷 Webcam Demo</h1>
+  <p>Работа с веб-камерой в браузере через <code>getUserMedia</code>. Видео никуда не отправляется.</p>
+</header>
+<main>
+  <section class="card">
+    <div class="stage">
+      <video id="video" autoplay playsinline muted class="mirror"></video>
+      <div class="placeholder" id="placeholder">Нажмите «Включить камеру» и разрешите доступ</div>
+    </div>
+    <div class="controls">
+      <button id="startBtn">▶ Включить камеру</button>
+      <button id="stopBtn" class="secondary" disabled>■ Выключить</button>
+      <button id="snapBtn" disabled>📸 Снимок</button>
+      <select id="cameraSelect" title="Камера"><option>Камера по умолчанию</option></select>
+      <select id="filterSelect" title="Фильтр">
+        <option value="none">Без фильтра</option>
+        <option value="grayscale(1)">Ч/Б</option>
+        <option value="sepia(1)">Сепия</option>
+        <option value="invert(1)">Инверсия</option>
+        <option value="contrast(1.6) saturate(1.6)">Яркие цвета</option>
+        <option value="blur(3px)">Размытие</option>
+        <option value="hue-rotate(180deg)">Смена оттенка</option>
+      </select>
+      <label><input type="checkbox" id="mirrorChk" checked> Зеркально</label>
+    </div>
+    <div id="status"></div>
+  </section>
+  <section class="card">
+    <h2 style="margin-top:0">Снимки</h2>
+    <div id="gallery"><p class="empty">Пока нет снимков.</p></div>
+  </section>
+</main>
+<canvas id="canvas"></canvas>
+<footer>Демо: HTML + JavaScript, без зависимостей. Работает по HTTPS (GitHub Pages) или на localhost.</footer>
+<script>
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const startBtn = document.getElementById('startBtn');
+const stopBtn = document.getElementById('stopBtn');
+const snapBtn = document.getElementById('snapBtn');
+const cameraSelect = document.getElementById('cameraSelect');
+const filterSelect = document.getElementById('filterSelect');
+const mirrorChk = document.getElementById('mirrorChk');
+const statusEl = document.getElementById('status');
+const placeholder = document.getElementById('placeholder');
+const gallery = document.getElementById('gallery');
+let stream = null;
+
+function setStatus(msg) { statusEl.textContent = msg; }
+
+async function listCameras() {
+  const devices = await navigator.mediaDevices.enumerateDevices();
+  const cams = devices.filter(d => d.kind === 'videoinput');
+  const current = cameraSelect.value;
+  cameraSelect.innerHTML = '';
+  cams.forEach((c, i) => {
+    const o = document.createElement('option');
+    o.value = c.deviceId;
+    o.textContent = c.label || `Камера ${i + 1}`;
+    cameraSelect.appendChild(o);
+  });
+  if ([...cameraSelect.options].some(o => o.value === current)) cameraSelect.value = current;
+}
+
+async function startCamera() {
+  if (!navigator.mediaDevices?.getUserMedia) {
+    setStatus('Ваш браузер не поддерживает доступ к камере.');
+    return;
+  }
+  stopCamera();
+  const deviceId = cameraSelect.value;
+  const constraints = {
+    video: deviceId && deviceId.length > 20
+      ? { deviceId: { exact: deviceId }, width: { ideal: 1280 }, height: { ideal: 720 } }
+      : { width: { ideal: 1280 }, height: { ideal: 720 } },
+    audio: false
+  };
+  try {
+    stream = await navigator.mediaDevices.getUserMedia(constraints);
+    video.srcObject = stream;
+    placeholder.style.display = 'none';
+    startBtn.disabled = true; stopBtn.disabled = false; snapBtn.disabled = false;
+    await listCameras();
+    const s = stream.getVideoTracks()[0].getSettings();
+    setStatus(`Камера включена: ${s.width}×${s.height}`);
+  } catch (err) {
+    const msgs = {
+      NotAllowedError: 'Доступ к камере запрещён. Разрешите его в настройках браузера.',
+      NotFoundError: 'Камера не найдена.',
+      NotReadableError: 'Камера занята другим приложением.'
+    };
+    setStatus(msgs[err.name] || `Ошибка: ${err.message}`);
+  }
+}
+
+function stopCamera() {
+  if (stream) stream.getTracks().forEach(t => t.stop());
+  stream = null;
+  video.srcObject = null;
+  placeholder.style.display = '';
+  startBtn.disabled = false; stopBtn.disabled = true; snapBtn.disabled = true;
+  setStatus('Камера выключена.');
+}
+
+function takeSnapshot() {
+  if (!stream) return;
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  const ctx = canvas.getContext('2d');
+  ctx.filter = filterSelect.value;
+  if (mirrorChk.checked) { ctx.translate(canvas.width, 0); ctx.scale(-1, 1); }
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  const url = canvas.toDataURL('image/png');
+  gallery.querySelector('.empty')?.remove();
+  const fig = document.createElement('figure');
+  const name = `snapshot-${new Date().toISOString().replace(/[:.]/g, '-')}.png`;
+  fig.innerHTML = `<img alt="Снимок" src="${url}"><a href="${url}" download="${name}">⬇ Скачать</a>`;
+  gallery.prepend(fig);
+}
+
+startBtn.onclick = startCamera;
+stopBtn.onclick = stopCamera;
+snapBtn.onclick = takeSnapshot;
+cameraSelect.onchange = () => { if (stream) startCamera(); };
+filterSelect.onchange = () => { video.style.filter = filterSelect.value; };
+mirrorChk.onchange = () => video.classList.toggle('mirror', mirrorChk.checked);
+navigator.mediaDevices?.addEventListener?.('devicechange', listCameras);
+listCameras().catch(() => {});
+</script>
+</body>
+</html>
