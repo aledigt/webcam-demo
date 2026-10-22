@@ -10,5 +10,6 @@
 
 Download: https://github.com/aledigt/webcam-demo/releases/latest/download/webcam-demo.apk
 
-Built automatically by GitHub Actions (`.github/workflows/android.yml`) from the `android/` WebView app.
-Install requires allowing installs from unknown sources.
+Native Android app (Kotlin + CameraX, Material 3) in `android/`: preview, front/back switch, live colour filters, photo capture to Pictures/WebcamDemo, in-app gallery of recent shots.
+Built and release-signed by GitHub Actions (`.github/workflows/android.yml`). Installing requires allowing installs from unknown sources.
+If you installed v1 (debug-signed WebView build), uninstall it once before installing v2.

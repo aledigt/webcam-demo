@@ -1,0 +1,23 @@
+<resources>
+  <string name="app_name">Webcam Demo</string>
+  <string name="switch_camera">Сменить камеру</string>
+  <string name="capture">Сделать снимок</string>
+  <string name="filter">Фильтр</string>
+  <string name="gallery">Последние снимки</string>
+  <string name="gallery_empty">Снимков пока нет</string>
+  <string name="perm_title">Нужен доступ к камере</string>
+  <string name="perm_rationale">Приложению нужна камера, чтобы показывать изображение и делать снимки. Видео никуда не отправляется.</string>
+  <string name="perm_denied_forever">Доступ к камере запрещён. Разрешите его в настройках приложения.</string>
+  <string name="grant">Разрешить</string>
+  <string name="open_settings">Открыть настройки</string>
+  <string name="saved">Снимок сохранён в Pictures/WebcamDemo</string>
+  <string name="save_failed">Не удалось сохранить снимок</string>
+  <string name="camera_error">Не удалось запустить камеру</string>
+  <string name="no_camera">Камера не найдена</string>
+  <string name="f_none">Без фильтра</string>
+  <string name="f_gray">Ч/Б</string>
+  <string name="f_sepia">Сепия</string>
+  <string name="f_invert">Инверсия</string>
+  <string name="f_vivid">Яркий</string>
+  <string name="f_hue">Сдвиг оттенка</string>
+</resources>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:fitsSystemWindows="true">
+  <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:background="#000">
+    <androidx.camera.view.PreviewView android:id="@+id/preview" android:layout_width="match_parent" android:layout_height="match_parent"/>
+    <LinearLayout android:id="@+id/permPanel" android:layout_width="match_parent" android:layout_height="match_parent"
+      android:orientation="vertical" android:gravity="center" android:padding="32dp" android:visibility="gone">
+      <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/perm_title"
+        android:textAppearance="?attr/textAppearanceTitleLarge"/>
+      <TextView android:id="@+id/permText" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center"
+        android:layout_marginTop="12dp" android:text="@string/perm_rationale" android:textAppearance="?attr/textAppearanceBodyMedium"/>
+      <com.google.android.material.button.MaterialButton android:id="@+id/permButton" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/grant"/>
+    </LinearLayout>
+  </FrameLayout>
+  <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:scrollbars="none">
+    <com.google.android.material.chip.ChipGroup android:id="@+id/filters" android:layout_width="wrap_content" android:layout_height="wrap_content"
+      android:paddingHorizontal="8dp" app:singleSelection="true" app:selectionRequired="true" app:singleLine="true"/>
+  </HorizontalScrollView>
+  <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:padding="8dp">
+    <com.google.android.material.button.MaterialButton android:id="@+id/switchBtn" style="@style/Widget.Material3.Button.TonalButton"
+      android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/switch_camera"/>
+    <com.google.android.material.button.MaterialButton android:id="@+id/captureBtn" android:layout_width="wrap_content"
+      android:layout_height="wrap_content" android:layout_marginStart="12dp" android:text="@string/capture"/>
+  </LinearLayout>
+  <TextView android:id="@+id/galleryTitle" android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:paddingHorizontal="12dp" android:text="@string/gallery_empty" android:textAppearance="?attr/textAppearanceLabelLarge"/>
+  <androidx.recyclerview.widget.RecyclerView android:id="@+id/gallery" android:layout_width="match_parent" android:layout_height="96dp"
+    android:padding="4dp" android:clipToPadding="false"/>
+</LinearLayout>
