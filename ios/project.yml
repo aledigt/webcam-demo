@@ -1,0 +1,28 @@
+name: WebcamDemo
+options:
+  bundleIdPrefix: io.github.aledigt
+  deploymentTarget: { iOS: "15.0" }
+targets:
+  WebcamDemo:
+    type: application
+    platform: iOS
+    sources: [WebcamDemo]
+    info:
+      path: WebcamDemo/Info.plist
+      properties:
+        CFBundleDisplayName: Webcam Demo
+        CFBundleShortVersionString: "2.0.0"
+        CFBundleVersion: "2"
+        CFBundleDevelopmentRegion: ru
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        NSCameraUsageDescription: Камера нужна, чтобы показывать изображение и делать снимки. Видео никуда не отправляется.
+        NSPhotoLibraryAddUsageDescription: Разрешите сохранять снимки в вашу медиатеку.
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.aledigt.webcamdemo
+        MARKETING_VERSION: "2.0.0"
+        CURRENT_PROJECT_VERSION: "2"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SWIFT_VERSION: "5.0"
+        GENERATE_INFOPLIST_FILE: NO
