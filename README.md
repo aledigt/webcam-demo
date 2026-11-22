@@ -14,6 +14,10 @@ Native Android app (Kotlin + CameraX, Material 3) in `android/`: preview, front/
 Built and release-signed by GitHub Actions (`.github/workflows/android.yml`). Installing requires allowing installs from unknown sources.
 If you installed v1 (debug-signed WebView build), uninstall it once before installing v2.
 
+## eVision Camera Shop
+
+Отдельное приложение в [`shop-android/`](shop-android/README.md): устанавливаемый debug-APK, который открывает PWA https://shop.evision.tech. Сборку webcam-demo и пакет `io.github.aledigt.webcamdemo` не заменяет. Сборка и артефакт — workflow `.github/workflows/shop-android.yml`.
+
 ## iOS (unsigned IPA for sideloading)
 
 Download: https://github.com/aledigt/webcam-demo/releases/latest/download/webcam-demo.ipa
