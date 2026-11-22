@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">eVision Camera Shop</string>
+  <string name="retry">Повторить</string>
+  <string name="load_error">Не удалось открыть shop.evision.tech. Проверьте подключение к интернету.</string>
+  <string name="webview_crashed">Страница остановилась. Нажмите «Повторить», чтобы открыть её снова.</string>
+  <string name="camera_denied">Камера не разрешена. Изображение и QR-сканер заработают после разрешения в настройках Android.</string>
+  <string name="open_settings">Открыть настройки</string>
+  <string name="blocked_url">Ссылка заблокирована: для неё нет безопасного HTTPS-перехода.</string>
+  <string name="download_started">Файл сохраняется в «Загрузки»</string>
+  <string name="download_failed">Не удалось сохранить файл</string>
+  <string name="no_handler">Нет приложения, чтобы открыть ссылку</string>
+</resources>
